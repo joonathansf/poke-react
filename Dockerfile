@@ -2,7 +2,6 @@ FROM node:18-buster-slim as builder
 
 ENV NODE_ENV=production
 
-COPY .env
 RUN mkdir /app && chown -R node:node /app
 
 WORKDIR /app
