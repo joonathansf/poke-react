@@ -1,21 +1,31 @@
-name: deploy website on heroku
+name: Create Heroku environment for feature branch
 
-on: [push, pull_request]
+on:
+  push:
+    branches:
+      - setup-workflow
 
 jobs:
-  build:
+  deploy:
     runs-on: ubuntu-latest
+
     steps:
-      - name: Checkout
+      - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: Build, Push and Release a Docker container to Heroku.
-        uses: gonuit/heroku-docker-deploy@v1.3.3
+      - name: Set up Heroku CLI
+        uses: akhileshns/heroku-deploy@v3.12.12
         with:
-        
-          email: ${{ secrets.HEROKU_EMAIL }}
           heroku_api_key: ${{ secrets.HEROKU_API_KEY }}
-          heroku_app_name: ${{ secrets.HEROKU_APP_NAME }}
-          dockerfile_directory: ./
-          dockerfile_name: Dockerfile
-          docker_options: "--no-cache"
+
+      - name: Create new Heroku app
+        run: |
+          heroku create ${{ secrets.HEROKU_APP_NAME }}-${{ github.ref_slug }} --remote ${{ github.ref_slug }}
+          heroku config:set APP_ENV=feature-${{ github.ref_slug }} --remote ${{ github.ref_slug }}
+
+      - name: Deploy to Heroku
+        uses: akhileshns/heroku-deploy@v3.12.12
+        with:
+          heroku_api_key: ${{ secrets.HEROKU_API_KEY }}
+          heroku_app_name: your-app-name-${{ github.ref_slug }}
+          heroku_remote_name: ${{ github.ref_slug }}
