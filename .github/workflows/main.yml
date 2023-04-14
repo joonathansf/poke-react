@@ -9,10 +9,7 @@ jobs:
     steps:
       - name: deploy heroku app
         uses: matmar10/pr-heroku-review-app@master
-        id: deploy
         with:
           github_token: ${{ secrets.SECRET_TOKEN }}
           heroku_api_token: ${{ secrets.HEROKU_API_KEY }}
           heroku_pipeline_id: ${{ secrets.HEROKU_PIPELINE_ID }}
-      - name: get review url
-        run: echo "The URL is ${{ steps.deploy }}"
