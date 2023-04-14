@@ -3,15 +3,17 @@ on:
     types: [opened, reopened, closed, synchronize]
 
 jobs:
-  heroku-review-application:
+  heroku-start-review:
     name: start review
     runs-on: ubuntu-latest
     steps:
-      - name: deploy heroku app & generate comment
+      - name: deploy heroku app
         uses: matmar10/pr-heroku-review-app@master
+        id: deploy
         with:
           github_token: ${{ secrets.SECRET_TOKEN }}
-          github_label: review app
           should_comment_pull_request: true
           heroku_api_token: ${{ secrets.HEROKU_API_KEY }}
           heroku_pipeline_id: ${{ secrets.HEROKU_PIPELINE_ID }}
+      - name: get review url
+        run: echo "The URL is ${{ steps.deploy }}"
