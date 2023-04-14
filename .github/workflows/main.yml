@@ -11,5 +11,6 @@ jobs:
         uses: matmar10/pr-heroku-review-app@master
         with:
           github_token: ${{ secrets.SECRET_TOKEN }}
+          should_comment_pull_request: true
           heroku_api_token: ${{ secrets.HEROKU_API_KEY }}
           heroku_pipeline_id: ${{ secrets.HEROKU_PIPELINE_ID }}
