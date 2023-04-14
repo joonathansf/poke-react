@@ -3,27 +3,15 @@ on:
     types: [opened, reopened, closed, synchronize]
 
 jobs:
-  automate-review-app:
+  heroku-review-application:
+    name: start review
     runs-on: ubuntu-latest
-    name: review app
     steps:
-      - name: Checkout
-        uses: actions/checkout@v3
-      - name: Deploy Heroku app
-        uses: pmbanugo/heroku-review-app-actions@v2.0.1
-        id: deploy
+      - name: deploy heroku app & generate comment
+        uses: matmar10/pr-heroku-review-app@master
         with:
-          api-key: ${{ secrets.HEROKU_API_KEY }}
-          pipeline-id: ${{ secrets.HEROKU_PIPELINE_ID }}
-          base-name: feature-${{ github.ref_name }}
-
-      - name: get the review app url
-        run: echo "The URL is ${{ steps.deploy.outputs.url }}"
-      - name: generate comment
-        uses: phulsechinmay/rewritable-pr-comment@v0.2.1
-        with:
-          GITHUB_TOKEN: ${{ secrets.SECRET_TOKEN }}
-          COMMENT_IDENTIFIER: "Heroku"
-          message: |
-            I deployed a review app for you to try out this pull request 👇🏽
-            Heroku App: ${{ steps.deploy.outputs.url }}
+          github_token: ${{ secrets.SECRET_TOKEN }}
+          github_label: review app
+          should_comment_pull_request: true
+          heroku_api_token: ${{ secrets.HEROKU_API_TOKEN }}
+          heroku_pipeline_id: ${{ secrets.HEROKU_PIPELINE_ID }}
