@@ -1,18 +1,29 @@
-name: Create Heroku environment for feature branch
-
 on:
-  push:
-    branches:
-      - setup-workflow
+  pull_request:
+    types: [opened, reopened, closed, synchronize]
 
 jobs:
-  deploy:
+  automate-review-app:
     runs-on: ubuntu-latest
-
+    name: A job to create and delete review a review app
     steps:
-      - uses: actions/checkout@v2
-      - uses: CDNievas/heroku-action@v1.0
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Deploy Heroku app
+        uses: pmbanugo/heroku-review-app-actions@v2.0.0 # Uses the action
+        id: deploy
         with:
-          heroku_email: ${{ secrets.HEROKU_EMAIL }}
-          heroku_api_key: ${{ secrets.HEROKU_API_KEY }}
-          heroku_app_name: feature-${{ github.ref_name }}
+          api-key: ${{ secrets.HEROKU_API_KEY }}
+          pipeline-id: ${{ secrets.HEROKU_PIPELINE_ID }}
+          base-name: getting-started
+          file-glob: "* .prettierrc" # optional
+      - name: Get the review app url # Use the output from the `deploy` step
+        run: echo "The URL is ${{ steps.deploy.outputs.url }}"
+      - name: Comment on commit # Optional: You can use any action to comment on the PR
+        uses: phulsechinmay/rewritable-pr-comment@v0.2.1
+        with:
+          GITHUB_TOKEN: ${{ secrets.SECRET_TOKEN }}
+          COMMENT_IDENTIFIER: "Heroku"
+          message: |
+            I deployed a review app for you to try out this pull request 👇🏽
+            Heroku App: ${{ steps.deploy.outputs.url }}
