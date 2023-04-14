@@ -13,6 +13,8 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
+      - uses: nelonoel/branch-name@v1.0.1
+
       - name: Create new Heroku app
         run: |
           heroku create ${{ secrets.HEROKU_APP_NAME }}-${{ BRANCH_NAME }} --remote ${{ BRANCH_NAME }}
