@@ -1,0 +1,15 @@
+on:
+  pull_request:
+    types: [opened, reopened, closed, synchronize]
+
+jobs:
+  heroku-start-review:
+    name: start review
+    runs-on: ubuntu-latest
+    steps:
+      - name: deploy heroku app
+        uses: matmar10/pr-heroku-review-app@master
+        with:
+          github_token: ${{ secrets.SECRET_TOKEN }}
+          heroku_api_token: ${{ secrets.HEROKU_API_KEY }}
+          heroku_pipeline_id: ${{ secrets.HEROKU_PIPELINE_ID }}
