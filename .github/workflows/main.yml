@@ -13,17 +13,14 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: Get branch name
-        run: echo ${{ toJson(github) }}
-
       - name: Create new Heroku app
         run: |
-          heroku create ${{ secrets.HEROKU_APP_NAME }}-${{ github.ref }} --remote ${{ github.ref }}
-          heroku config:set APP_ENV=feature-${{ github.ref }} --remote ${{ github.ref }}
+          heroku create ${{ secrets.HEROKU_APP_NAME }}-${{ github.ref_name }} --remote ${{ github.ref_name }}
+          heroku config:set APP_ENV=feature-${{ github.ref_name }} --remote ${{ github.ref_name }}
 
       - name: Deploy to Heroku
         uses: akhileshns/heroku-deploy@v3.12.12
         with:
           heroku_api_key: ${{ secrets.HEROKU_API_KEY }}
-          heroku_app_name: ${{ secrets.HEROKU_APP_NAME }}-${{ github.ref }}
-          heroku_remote_name: ${{ github.ref }}
+          heroku_app_name: ${{ secrets.HEROKU_APP_NAME }}-${{ github.ref_name }}
+          heroku_remote_name: ${{ github.ref_name }}
