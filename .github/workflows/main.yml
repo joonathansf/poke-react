@@ -10,16 +10,16 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
       - name: Deploy Heroku app
-        uses: pmbanugo/heroku-review-app-actions@v2.0.0 # Uses the action
+        uses: pmbanugo/heroku-review-app-actions@v2.0.1
         id: deploy
         with:
           api-key: ${{ secrets.HEROKU_API_KEY }}
           pipeline-id: ${{ secrets.HEROKU_PIPELINE_ID }}
-          base-name: getting-started
+          base-name: feature-${{ github.ref_name }}
 
-      - name: Get the review app url # Use the output from the `deploy` step
+      - name: get the review app url
         run: echo "The URL is ${{ steps.deploy.outputs.url }}"
-      - name: Comment on commit # Optional: You can use any action to comment on the PR
+      - name: generate comment
         uses: phulsechinmay/rewritable-pr-comment@v0.2.1
         with:
           GITHUB_TOKEN: ${{ secrets.SECRET_TOKEN }}
