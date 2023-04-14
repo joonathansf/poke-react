@@ -13,5 +13,5 @@ jobs:
           github_token: ${{ secrets.SECRET_TOKEN }}
           github_label: review app
           should_comment_pull_request: true
-          heroku_api_token: ${{ secrets.HEROKU_API_TOKEN }}
+          heroku_api_token: ${{ secrets.HEROKU_API_KEY }}
           heroku_pipeline_id: ${{ secrets.HEROKU_PIPELINE_ID }}
