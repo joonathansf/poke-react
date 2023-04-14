@@ -13,16 +13,17 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      - uses: nelonoel/branch-name@v1.0.1
+      - name: Get branch name
+        run: echo ${{ github.ref }}
 
       - name: Create new Heroku app
         run: |
-          heroku create ${{ secrets.HEROKU_APP_NAME }}-${{ BRANCH_NAME }} --remote ${{ BRANCH_NAME }}
-          heroku config:set APP_ENV=feature-${{ BRANCH_NAME }} --remote ${{ BRANCH_NAME }}
+          heroku create ${{ secrets.HEROKU_APP_NAME }}-${{ github.ref }} --remote ${{ github.ref }}
+          heroku config:set APP_ENV=feature-${{ github.ref }} --remote ${{ github.ref }}
 
       - name: Deploy to Heroku
         uses: akhileshns/heroku-deploy@v3.12.12
         with:
           heroku_api_key: ${{ secrets.HEROKU_API_KEY }}
-          heroku_app_name: ${{ secrets.HEROKU_APP_NAME }}-${{ BRANCH_NAME }}
-          heroku_remote_name: ${{ BRANCH_NAME }}
+          heroku_app_name: ${{ secrets.HEROKU_APP_NAME }}-${{ github.ref }}
+          heroku_remote_name: ${{ github.ref }}
